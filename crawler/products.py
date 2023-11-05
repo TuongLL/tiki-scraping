@@ -13,9 +13,9 @@ def export_to_csv(data):
 
     header = list(data[0].keys());      
     try:
-        with open('./products/categories.csv', 'w', newline='') as usersFile:
+        with open('./products/10k_2.csv', 'w', newline='') as usersFile:
             fileWriter = csv.writer(usersFile, delimiter=',')
-            reader = csv.reader('./products/categories.csv')
+            reader = csv.reader('./products/10k_2.csv')
             if(reader.line_num == 0):
                 fileWriter.writerow(header)
             for row in data:
@@ -25,15 +25,15 @@ def export_to_csv(data):
         print(f"Error exporting data to users: {e}")
 
 def process_product_by_link(info: dict):
-    sleep_duration = random.uniform(1, 2)  # Random sleep duration between 1 and 5 seconds
+    # print("call")
+    sleep_duration = random.uniform(1, 3)  # Random sleep duration between 1 and 5 seconds
     time.sleep(sleep_duration)
-    print('Crawling: ...',info['id'])
+    print('Crawling: ...',info['stt'])
     print(f'https://tiki.vn/api/v2/products/{info["id"]}')
     response = requests.get(f'https://tiki.vn/api/v2/products/{info["id"]}', headers ={
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51',
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'en-US,en;q=0.9',
-
     'x-guest-token': '81n0c5t7OCxfZSRNe69uDWGpE3MJrVPd',
     'Connection': 'keep-alive',
     'TE': 'Trailers',
@@ -52,6 +52,7 @@ def parallel_get_categories(df_link):
 
 if __name__ == "__main__":
     df_link = pd.read_csv(
-        os.path.join(os.getcwd(), "./dataRaw/amply-23462.csv"), delimiter=','
+        os.path.join(os.getcwd(), "./dataRaw/test.csv"), delimiter=','
        )
+
     parallel_get_categories(df_link)
