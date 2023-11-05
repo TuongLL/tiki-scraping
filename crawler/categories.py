@@ -14,7 +14,7 @@ def export_to_csv(data):
     header = list(data[0].keys());      
     try:
         with open('categories.csv', 'w', newline='') as usersFile:
-            fileWriter = csv.writer(usersFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            fileWriter = csv.writer(usersFile, delimiter=',')
             reader = csv.reader('categories.csv')
             if(reader.line_num == 0):
                 fileWriter.writerow(header)
@@ -46,7 +46,7 @@ def process_product_by_link(info: dict):
     print(f'Save file successfully')
 
 def parallel_get_categories(df_link):
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         executor.map(process_product_by_link, df_link.to_dict('records'))
     export_to_csv(tmp)
 
