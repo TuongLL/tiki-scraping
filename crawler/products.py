@@ -5,6 +5,8 @@ import random
 import concurrent.futures
 import os
 import csv
+import json
+
 tmp = []
 def export_to_csv(data):
     if(not data):
@@ -13,13 +15,8 @@ def export_to_csv(data):
 
     header = list(data[0].keys());      
     try:
-        with open('./products/10k_2.csv', 'w', newline='') as usersFile:
-            fileWriter = csv.writer(usersFile, delimiter=',')
-            reader = csv.reader('./products/10k_2.csv')
-            if(reader.line_num == 0):
-                fileWriter.writerow(header)
-            for row in data:
-                fileWriter.writerow(list(row.values())) 
+        with open('./products/10k_3.json', 'w', newline='') as usersFile:
+            json.dump(data,usersFile)
         print("Error exporting data to users")
     except Exception as e:
         print(f"Error exporting data to users: {e}")
@@ -39,14 +36,18 @@ def process_product_by_link(info: dict):
     'TE': 'Trailers',
     })
 
+
+    fields_to_exclude = ["master_id", "url_path", "short_url","type","book_cover","short_description","badges","review_count","badges_new","rating_average","review_text","has_ebook","inventory_type","productset_group_name","is_fresh","is_flower","has_buynow","is_gift_card","salable_type","data_version","day_ago_created","meta_title","meta_description","meta_keywords","is_baby_milk","is_acoholic_drink","warranty_policy","current_seller","other_sellers","specifications","product_links","gift_item_title","services_and_promotions","installment_info_v2","is_seller_in_chat_whitelist","warranty_info","inventory","return_and_exchange_policy","is_tier_pricing_available","is_tier_pricing_eligible","benefits","asa_cashback_widget"]
+
     if(response.status_code==200):
-        tmp.append(response.json())
+        filtered_data = {key: value for key, value in response.json().items() if key not in fields_to_exclude}
+        tmp.append(filtered_data)
 
 
     print(f'Save file successfully')
 
 def parallel_get_categories(df_link):
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         executor.map(process_product_by_link, df_link.to_dict('records'))
     export_to_csv(tmp)
 
