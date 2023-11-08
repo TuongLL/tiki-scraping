@@ -37,10 +37,10 @@ def process_product_by_link(info: dict):
     })
 
 
-    fields_to_exclude = ["master_id", "url_path", "short_url","type","book_cover","short_description","badges","review_count","badges_new","rating_average","review_text","has_ebook","inventory_type","productset_group_name","is_fresh","is_flower","has_buynow","is_gift_card","salable_type","data_version","day_ago_created","meta_title","meta_description","meta_keywords","is_baby_milk","is_acoholic_drink","warranty_policy","current_seller","other_sellers","specifications","product_links","gift_item_title","services_and_promotions","installment_info_v2","is_seller_in_chat_whitelist","warranty_info","inventory","return_and_exchange_policy","is_tier_pricing_available","is_tier_pricing_eligible","benefits","asa_cashback_widget","sku","promotions"]
-
+    # fields_to_exclude = ["master_id", "url_path", "short_url","type","book_cover","short_description","badges","review_count","badges_new","rating_average","review_text","has_ebook","inventory_type","productset_group_name","is_fresh","is_flower","has_buynow","is_gift_card","salable_type","data_version","day_ago_created","meta_title","meta_description","meta_keywords","is_baby_milk","is_acoholic_drink","warranty_policy","current_seller","other_sellers","specifications","product_links","gift_item_title","services_and_promotions","installment_info_v2","is_seller_in_chat_whitelist","warranty_info","inventory","return_and_exchange_policy","is_tier_pricing_available","is_tier_pricing_eligible","benefits","asa_cashback_widget","sku","promotions","seller", "quantity_sold","add_on_title","add_on"]
+    fields_to_include = ["id","name","url_key","type","price","list_price","original_price","discount","discount_rate","rating_average","review_count","favourite_count","thumbnail_url","description","configurable_options","configurable_products","stock_item","categories","breadcrumbs","video_url"]
     if(response.status_code==200):
-        filtered_data = {key: value for key, value in response.json().items() if key not in fields_to_exclude}
+        filtered_data = { key: value for key, value in response.json().items() if key  in fields_to_include}
         tmp.append(filtered_data)
 
 
