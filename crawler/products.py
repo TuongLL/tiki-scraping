@@ -15,9 +15,13 @@ def export_to_csv(data):
 
     header = list(data[0].keys());      
     try:
-        with open('./products/10k_3.json', 'w', newline='') as usersFile:
+        with open('./mapping/data7.json', 'w', newline='') as usersFile:
+            # for x in data:
+            #     for breadcrumbs in x["breadcrumbs"]:
+            #         if breadcrumbs['category_id'] != 0:
+            #             json.dump({'id': x['id'], 'category_id': breadcrumbs['category_id']},usersFile)
             json.dump(data,usersFile)
-        print("Error exporting data to users")
+            print("save file successfully")
     except Exception as e:
         print(f"Error exporting data to users: {e}")
 
@@ -38,10 +42,13 @@ def process_product_by_link(info: dict):
 
 
     # fields_to_exclude = ["master_id", "url_path", "short_url","type","book_cover","short_description","badges","review_count","badges_new","rating_average","review_text","has_ebook","inventory_type","productset_group_name","is_fresh","is_flower","has_buynow","is_gift_card","salable_type","data_version","day_ago_created","meta_title","meta_description","meta_keywords","is_baby_milk","is_acoholic_drink","warranty_policy","current_seller","other_sellers","specifications","product_links","gift_item_title","services_and_promotions","installment_info_v2","is_seller_in_chat_whitelist","warranty_info","inventory","return_and_exchange_policy","is_tier_pricing_available","is_tier_pricing_eligible","benefits","asa_cashback_widget","sku","promotions","seller", "quantity_sold","add_on_title","add_on"]
-    fields_to_include = ["id","name","url_key","type","price","list_price","original_price","discount","discount_rate","rating_average","review_count","favourite_count","thumbnail_url","description","configurable_options","configurable_products","stock_item","categories","breadcrumbs","video_url","images"]
+    fields_to_include = ["id","breadcrumbs"]
     if(response.status_code==200):
         filtered_data = { key: value for key, value in response.json().items() if key  in fields_to_include}
-        tmp.append(filtered_data)
+        for breadcrumbs in filtered_data["breadcrumbs"]:
+            if breadcrumbs['category_id'] != 0:
+                tmp.append({'product_id': filtered_data['id'], 'category_id': breadcrumbs['category_id']})
+        # tmp.append(filtered_data)
 
 
     print(f'Save file successfully')
